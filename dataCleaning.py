@@ -1,10 +1,10 @@
 import pandas as pd
 
-file_path = "/home/lehoang/Desktop/hanoi-us-embassy-air-quality-base.xlsx"
-df = pd.read_excel(file_path)
+file_path = "/home/lehoang/Desktop/Project_airPollution/hanoi-us-embassy-air-quality.csv"
+df = pd.read_csv(file_path)
 
 # Loại bỏ cột 'co' và 'aqi' từ DataFrame
-df.drop(columns=['co', 'aqi'], inplace=True)
+df.drop(columns=[' co', ' aqi'], inplace=True)
 
 
 # Loại bỏ các hàng trùng lặp
@@ -38,5 +38,5 @@ df["Ozon"] = df["Ozon"].str.replace("'", '').str.replace(' ', '')
 df["Sulfur_Dioxide"] = df["Sulfur_Dioxide"].str.replace("'", '').str.replace(' ', '')
 
 # Lưu file sau khi đã hoàn thành tiền xử lý dữ liệu
-output_file_path = "/home/lehoang/Desktop/hanoi-us-embassy-air-quality-after-cleaning_1.xlsx"
-df.to_excel(output_file_path, index=False)
+output_file_path = "/home/lehoang/Desktop/Project_airPollution/hanoi-us-embassy-air-quality-after-cleaning.csv"
+df.to_csv(output_file_path, index=False)
