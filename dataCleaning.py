@@ -1,42 +1,58 @@
+"""
+Muc tieu
+1. Loai bo cac cot (column) co gia tri hoan toan rong
+2. Loai bo cac hang co gia tri rong
+3. Xoa dau SPACE nam o phia truoc ten moi cot (column)
+"""
+
+
 import pandas as pd
 
-file_path = "/home/lehoang/Desktop/Project_airPollution/hanoi-us-embassy-air-quality.csv"
+# co the thuc hien thay doi file_name de cleaning nhieu file cung luc
+# dien ten file vao day de thuc hien tien xu ly du lieu
+file_name = "hanoi-us-embassy-air-quality"
+file_path = "/home/lehoang/Desktop/Project_airPollution/" + file_name + ".csv"
 df = pd.read_csv(file_path)
 
-# Loại bỏ cột 'co' và 'aqi' từ DataFrame
-df.drop(columns=[' co', ' aqi'], inplace=True)
+if " aqi" in df.columns:
+    df.drop(columns=" aqi", inplace= True)
 
+# Loại bỏ cột 'co' và 'aqi' từ DataFrame
+#df.drop(columns=['co', 'aqi'], inplace=True)
+
+# Tìm và xóa các cột có tất cả giá trị là rỗng
+df = df.dropna(axis=1, how='all')
 
 # Loại bỏ các hàng trùng lặp
 df.drop_duplicates(inplace=True)
 
 # Loại bỏ các hàng có giá trị cột "Nitrogen_Dioxide" là NaN hoặc rỗng
-df = df[~df["Nitrogen_Dioxide"].isna() & (df["Nitrogen_Dioxide"] != ' ')]
+df = df[~df[" no2"].isna() & (df[" no2"] != ' ')]
 
 # Loại bỏ các hàng có giá trị cột "Sulfur_Dioxide" là NaN hoặc rỗng
-df = df[~df["Sulfur_Dioxide"].isna() & (df["Sulfur_Dioxide"] != ' ')]
+df = df[~df[" so2"].isna() & (df[" so2"] != ' ')]
 
 # Loại bỏ các hàng có giá trị cột "Ozon" là rỗng
-df = df[df["Ozon"] != ' ']
+df = df[~df[" o3"].isna() & (df[" o3"] != ' ')]
 
-# Loại bỏ các hàng có giá trị cột "Particulate_Matter" là rỗng
-df = df[df["Particulate_Matter"] != ' ']
+# Loại bỏ các hàng có giá trị cột "pm25" là rỗng
+df = df[~df[" pm25"].isna() & (df[" pm25"] != ' ')]
 
 # Loại bỏ các hàng có giá trị cột "Date" là rỗng
-df = df[df["Date"] != ' ']
+df = df[df["date"] != ' ']
 
-# Chuyển đổi dữ liệu của các cột sang kiểu chuỗi
-df['Particulate_Matter'] = df['Particulate_Matter'].astype(str)
-df['Nitrogen_Dioxide'] = df['Nitrogen_Dioxide'].astype(str)
-df['Ozon'] = df['Ozon'].astype(str)
-df['Sulfur_Dioxide'] = df['Sulfur_Dioxide'].astype(str)
+#loai bo cac hang co gia tri cot "pm10" la rong
+if " pm10" in df.columns:
+    df = df[~df[" pm10"].isna() & (df[" pm10"] != ' ')]
 
-# Loại bỏ khoảng trắng và dấu "'" không mong muốn
-df["Particulate_Matter"] = df["Particulate_Matter"].str.replace("'", '').str.replace(' ', '')
-df["Nitrogen_Dioxide"] = df["Nitrogen_Dioxide"].str.replace("'", '').str.replace(' ', '')
-df["Ozon"] = df["Ozon"].str.replace("'", '').str.replace(' ', '')
-df["Sulfur_Dioxide"] = df["Sulfur_Dioxide"].str.replace("'", '').str.replace(' ', '')
+
+#loai bo cac hang co gia tri cot "co" la rong
+df = df[~df[" co"].isna() & (df[" co"] != ' ')]
+
+# Loại bỏ khoảng trắng từ tên các cột
+df.rename(columns=lambda x: x.strip(), inplace=True)
+
 
 # Lưu file sau khi đã hoàn thành tiền xử lý dữ liệu
-output_file_path = "/home/lehoang/Desktop/Project_airPollution/hanoi-us-embassy-air-quality-after-cleaning.csv"
+output_file_path = "/home/lehoang/Desktop/Project_airPollution/" + file_name + "-after-cleaning" + ".csv"
 df.to_csv(output_file_path, index=False)
